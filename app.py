@@ -3,6 +3,7 @@ import os
 import requests
 
 app = Flask(__name__)
+app.secret_key = 'your_secret_key_here'
 
 @app.route('/', methods=['GET', 'POST'])
 def login():
@@ -14,12 +15,12 @@ def login():
         # Ensure username was submitted
         if not request.form.get('username'):
             error = 'must provide username'
-            return render_template('/', error=error)
+            return render_template('login.html', error=error)
 
         # Ensure password was submitted
         elif not request.form.get('password'):
             error = 'must provide password'
-            return render_template('/', error=error)
+            return render_template('login.html', error=error)
 
         # Authenticate the user and obtain an access token
         auth_url = 'https://api.instagram.com/oauth/authorize'
@@ -39,7 +40,7 @@ def login():
         auth_url = requests.Request('GET', auth_url, params=params).prepare().url
         return redirect(auth_url)
 
-    return render_template('index.html')
+    return render_template('login.html')
 
 @app.route('/callback', methods=['GET'])
 def callback():
@@ -228,3 +229,6 @@ def admires():
             admires.append(follower)
             
     return render_template("admires.html", admires=admires)
+
+if __name__ == '__main__':
+    app.run(debug=True)
