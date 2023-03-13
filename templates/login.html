@@ -61,21 +61,19 @@
 <!--<link href="login.css" rel="stylesheet">-->
     </head>
     <body class="text-center">
-      <main class="form-signin w-100 m-auto">
-        <form action="/login" method="post">
-          <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
-      
-          <div class="form-floating">
-            <input type="text" class="form-control" id="username" name="username" placeholder="username">
-            <label for="username">Account name</label>
-          </div>
-          <div class="form-floating">
-            <input type="password" class="form-control" id="password" name="password" placeholder="Password">
-            <label for="password">Password</label>
-          </div>
-          <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
-        </form>
-      </main>
-            
+      <h1 class="h3 mb-3 fw-normal">Login</h1>
+      <form method="post">
+        <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+
+    <div class="form-floating">
+      <input type="text" class="form-control" id="username" placeholder="username" name="username">
+      <label for="floatingInput">Email address</label>
+    </div>
+    <div class="form-floating">
+      <input type="password" class="form-control" id="password" placeholder="password" name="password">
+      <label for="floatingPassword">Password</label>
+    </div>
+        <button class="w-100 btn btn-lg btn-primary" type="submit">Login with Instagram</button>
+      </form>
     </body>
-</html>
+  </html>
