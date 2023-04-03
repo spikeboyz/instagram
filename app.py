@@ -7,7 +7,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time 
 
-from helper import login_instagram, naviagate_to_followers
+from helper import login_instagram, naviagate_to_profile, get_followers, get_following
 
 #credit to https://github.com/JasonLeviGoodison/InstagramScripts/blob/master/UserInfo.py
 # on how to acess instagram's data
@@ -15,8 +15,12 @@ from helper import login_instagram, naviagate_to_followers
 app = Flask(__name__, template_folder='templates')
 app.secret_key = 'your_secret_key_here'
 
+following_list = list()
+followers_list = list()
+
 @app.route('/', methods=['GET', 'POST'])
 def login():
+    global following_list, followers_list
     if request.method == 'POST':
         #request for the users instagrams log in and password
         username = request.form.get('username')
@@ -29,7 +33,10 @@ def login():
             driver = webdriver.Chrome(ChromeDriverManager().install())
             driver.get('https://www.instagram.com/accounts/login/?source=auth_switcher')
             login_instagram(driver, username, password)   
-            naviagate_to_followers(driver, username)         
+            naviagate_to_profile(driver, username)     
+            followers_list = get_followers(driver, username)
+            following_list = get_following(driver, username)
+
     return render_template('login.html')
 
 
