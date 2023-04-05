@@ -1,16 +1,7 @@
 from flask import Flask, render_template, request, redirect, session, url_for
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-from webdrivermanager.chrome import ChromeDriverManager
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-import time 
+from igramscraper.instagram import Instagram
+from time import sleep
 
-from helper import login_instagram, naviagate_to_profile, get_followers, get_following
-
-#credit to https://github.com/JasonLeviGoodison/InstagramScripts/blob/master/UserInfo.py
-# on how to acess instagram's data
 
 app = Flask(__name__, template_folder='templates')
 app.secret_key = 'your_secret_key_here'
@@ -29,14 +20,15 @@ def login():
             error_msg = "Please provide both a username and a password."
             return render_template('login.html', error_msg=error_msg)
         else:
-            #start a browser that logs into their instagram
-            driver = webdriver.Chrome(ChromeDriverManager().install())
-            driver.get('https://www.instagram.com/accounts/login/?source=auth_switcher')
-            login_instagram(driver, username, password)   
-            naviagate_to_profile(driver, username)     
-            followers_list = get_followers(driver, username)
-            following_list = get_following(driver, username)
-
+            instagram = Instagram()
+            instagram.with_credentials(username, password)
+            instagram.login(force=False,two_step_verificator=True)
+            #delay to mimic the user 
+            sleep(3)
+            account = instagram.get_account(username)
+            followers_list = instagram.get_followers(account.identifier, 100, delayed=True) 
+            following_list = instagram.get_following(account.identifier, 100, delayed=True)
+            return redirect(url_for("home"))
     return render_template('login.html')
 
 
