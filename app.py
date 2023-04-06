@@ -32,7 +32,6 @@ def login():
     return render_template('login.html')
 
 
-
 @app.route('/home', methods=['GET'])
 def main():
     return render_template("home.html")
@@ -40,21 +39,31 @@ def main():
 
 @app.route('/followers', methods=['GET'])
 def followers():
-
-    # Render the followers template and pass in the list of followers
-    return render_template("followers.html", followers=followers)
+    global followers_list
+    return render_template("followers.html", followers=followers_list)
 
 
 @app.route('/following', methods=['GET'])
 def following():
-    return render_template("follow_back.html", back=back)
+    global following_list
+    return render_template("follow_back.html", following=following_list)
 
 @app.route('/unfollowers', methods=['GET'])
 def unfollowers():
+    global following_list, followers_list
+    unfollowers = list()
+    for follow in following_list:
+        if follow not in followers_list:
+            unfollowers.append(follow)
     return render_template("unfollowers.html", unfollowers=unfollowers)
 
 @app.route('/admires', methods=['GET'])
-def admires():            
+def admires():
+    global followers_list, followers_list
+    admires = list()
+    for follow in followers_list:
+        if follow not in following_list:
+            admires.append(follow)            
     return render_template("admires.html", admires=admires)
 
 if __name__ == '__main__':
